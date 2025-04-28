@@ -119,7 +119,10 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps(f"Text extracted and saved to {output_key}")
     }
+
+
 ---
+
 
 ### **5. Create an API Gateway for File Uploads**
 1. Go to the API Gateway Console and create a new HTTP API.
@@ -172,3 +175,4 @@ def lambda_handler(event, context):
      -H "filename: test-file.txt" \
      --data-binary @<local-file-path>
      ```
+---
