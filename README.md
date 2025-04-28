@@ -119,3 +119,56 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps(f"Text extracted and saved to {output_key}")
     }
+---
+
+### **5. Create an API Gateway for File Uploads**
+1. Go to the API Gateway Console and create a new HTTP API.
+2. Add a new route:
+  - Method: POST.
+3. Resource path: /upload.
+4. Integrate the route with a Lambda function:
+5. Create a new Lambda function (upload-to-s3-lambda) with the following code:
+```python
+import json
+import boto3
+import base64
+
+s3 = boto3.client('s3')
+
+def lambda_handler(event, context):
+    try:
+        # Extract the file content and filename from the API Gateway event
+        body = event['body']
+        decoded_body = base64.b64decode(body)  # Decode the base64-encoded file content
+        bucket_name = "api-upload-bucket"  # Replace with your S3 bucket name
+        file_name = event['headers']['filename']  # Filename passed in the headers
+
+        # Upload the file to S3
+        s3.put_object(
+            Bucket=bucket_name,
+            Key=file_name,
+            Body=decoded_body
+        )
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(f"File {file_name} uploaded successfully to {bucket_name}")
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f"Error: {str(e)}")
+        }
+```
+
+6. Deploy the API:
+  - Create a new stage (e.g., prod) and deploy the API.
+
+7.  Test the API
+   - using Curl
+     ```bash
+     curl -X POST "https://<api-id>.execute-api.<region>.amazonaws.com/prod/upload" \
+     -H "Content-Type: application/octet-stream" \
+     -H "filename: test-file.txt" \
+     --data-binary @<local-file-path>
+     ```
