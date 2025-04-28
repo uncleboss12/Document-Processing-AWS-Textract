@@ -119,7 +119,7 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps(f"Text extracted and saved to {output_key}")
     }
-
+```
 
 ---
 
@@ -131,6 +131,8 @@ def lambda_handler(event, context):
 3. Resource path: /upload.
 4. Integrate the route with a Lambda function:
 5. Create a new Lambda function (upload-to-s3-lambda) with the following code:
+
+
 ```python
 import json
 import boto3
